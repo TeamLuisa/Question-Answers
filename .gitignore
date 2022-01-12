@@ -1,0 +1,6 @@
+node_modules/
+config/config.js
+.eslintrc.json
+.DS_Store
+*.csv
+package-lock.json
