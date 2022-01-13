@@ -11,4 +11,16 @@ const credentials = {
 };
 
 const db = pgp(credentials);
+
+// // check if db connected
+// db.connect()
+//   .then((obj) => {
+//     // Can check the server version here (pg-promise v10.1.0+):
+//     console.log('pgp connected!');
+//     obj.done(); // success, release the connection;
+//   })
+//   .catch((error) => {
+//     console.log('ERROR:', error.message || error);
+//   });
+
 module.exports = db;
