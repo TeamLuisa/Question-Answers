@@ -18,5 +18,5 @@ copy answers(id, question_id, body, date_written, answerer_name, answerer_email,
 FROM '/Users/meilinchen/sei/SDC/answers.csv'
 DELIMITER ','
 CSV HEADER;
-DROP INDEX question_idx;
+
 CREATE INDEX question_idx ON answers USING HASH (question_id);
