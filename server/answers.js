@@ -27,6 +27,9 @@ module.exports.getAnswers = async (req, res) => {
   res.send(response);
 };
 
-// module.exports.postAns = async(req, res) => {
+// module.exports.postAnswer = async (req, res) => {
 //   // lll
 // };
+
+// putHelpful
+// putReport

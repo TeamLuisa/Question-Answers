@@ -21,6 +21,8 @@ app.get('/answers', Answers.getAnswers);
 
 app.get('/questions', Questions.getQuestions);
 
+app.post('/questions', Questions.postQuestion);
+
 app.listen(port, () => {
   console.log(`Listening as port: ${port}`);
 });
