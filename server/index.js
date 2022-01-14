@@ -1,7 +1,9 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const express = require('express');
-const db = require('../database/index.js');
+// const db = require('../database/index.js');
+const Answers = require('./answers.js');
+const Questions = require('./questions.js');
 
 const app = express();
 const port = 3300;
@@ -14,37 +16,10 @@ app.get('/', (req, res) => {
 // get: answers, questions
 // post: answers, questions
 // put: ansqers report & helpful, questions report & helpful
-app.get('/answers', async (req, res) => {
-  const response = {};
-  response.question = req.query.question_id;
-  const qry = `
-  SELECT answers.id as answer_id,
-  answers.body,
-  to_timestamp(answers.date_written/1000) as date,
-  answers.answerer_name, answers.helpful as helpfulness,
-  json_agg(json_build_object('id', photos.id, 'url', photos.url)) AS photos
-  FROM answers LEFT JOIN photos ON photos.answer_id = answers.id
-  WHERE question_id = ${req.query.question_id} GROUP BY answers.id
-  LIMIT 20
-  `;
-  await db
-    .query(qry)
-    .then((data) => {
-      data.forEach((answer) => {
-        if (answer.photos[0].id === null) {
-          answer.photos = [];
-        }
-      });
-      response.results = data;
-      return response;
-    })
-    .then(() => {
-      res.send(response);
-    })
-    .catch((err) => {
-      res.send(err);
-    });
-});
+
+app.get('/answers', Answers.getAnswers);
+
+app.get('/questions', Questions.getQuestions);
 
 app.listen(port, () => {
   console.log(`Listening as port: ${port}`);
