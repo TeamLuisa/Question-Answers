@@ -21,6 +21,8 @@ app.get('/answers', Answers.getAnswers);
 
 app.get('/questions', Questions.getQuestions);
 
+app.post('/answers', Answers.postAnswer);
+
 app.post('/questions', Questions.postQuestion);
 
 app.listen(port, () => {

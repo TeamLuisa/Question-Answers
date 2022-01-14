@@ -59,16 +59,17 @@ module.exports.postQuestion = async (req, res) => {
   const id = await db.query('SELECT MAX(id) FROM questions').catch((err) => {
     res.send(err);
   });
-  db.none(qry, [
-    id[0].max + 1,
-    product_id,
-    body,
-    Date.now(),
-    name,
-    email,
-    false,
-    0,
-  ])
+  await db
+    .none(qry, [
+      id[0].max + 1,
+      product_id,
+      body,
+      Date.now(),
+      name,
+      email,
+      false,
+      0,
+    ])
     .then(() => {
       res.sendStatus(200);
     })
