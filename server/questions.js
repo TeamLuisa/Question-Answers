@@ -95,9 +95,9 @@ module.exports.updateHelpful = async (req, res) => {
 // param: question_id >> req.query
 module.exports.updateReport = async (req, res) => {
   const question_id = req.query.question_id;
-  const qry = `UPDATE answers SET reported = ${true} WHERE id = ${question_id}`;
+  const qry = `UPDATE questions SET reported = ${true} WHERE id = ${question_id}`;
   await db
-    .none(qry)
+    .query(qry)
     .then(() => {
       res.sendStatus(200);
     })
