@@ -1,3 +1,6 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable object-curly-newline */
+/* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
@@ -41,6 +44,64 @@ module.exports.getQuestions = async (req, res) => {
   res.send(response);
 };
 
-// module.exports.postQuestion = async(req, res) => {
-// // lll
-// };
+// params: body, name, email, product_id
+// find last question id use db.query >>> [maxid(int)]
+// insert new info to dt
+// qry = INSERT INTO tablename (col1, col2, col3) VALUES ($1, $2, $3)
+// db.none(qry, [tofill1, tofill2, tofill3])
+module.exports.postQuestion = async (req, res) => {
+  const { body, name, email, product_id } = req.body;
+  const qry = `
+  INSERT INTO questions(
+  id, product_id, body, date_written, asker_name, asker_email, reported, helpful
+  )
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8)`;
+  const id = await db.query('SELECT MAX(id) FROM questions').catch((err) => {
+    res.send(err);
+  });
+  await db
+    .none(qry, [
+      id[0].max + 1,
+      product_id,
+      body,
+      Date.now(),
+      name,
+      email,
+      false,
+      0,
+    ])
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(500);
+    });
+};
+
+// param: question_id >> req.query
+module.exports.updateHelpful = async (req, res) => {
+  const question_id = req.query.question_id;
+  const qry = `UPDATE questions SET helpful = helpful+1 WHERE id = ${question_id}`;
+  await db
+    .none(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
+
+// param: question_id >> req.query
+module.exports.updateReport = async (req, res) => {
+  const question_id = req.query.question_id;
+  const qry = `UPDATE questions SET reported = ${true} WHERE id = ${question_id}`;
+  await db
+    .query(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};

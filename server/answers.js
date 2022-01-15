@@ -1,3 +1,8 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-plusplus */
+/* eslint-disable object-curly-newline */
+/* eslint-disable comma-dangle */
+/* eslint-disable camelcase */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -27,6 +32,85 @@ module.exports.getAnswers = async (req, res) => {
   res.send(response);
 };
 
-// module.exports.postAns = async(req, res) => {
-//   // lll
-// };
+// find last answer id, newly added answer will be id.max[0] + 1
+// find last photo id, ...
+// insert new answer data...
+// if photo array is empty, don't insert new photo data
+// if else, iterate each url of photo array
+// new photo id each round, but same answer id, insert new photo data...
+module.exports.postAnswer = async (req, res) => {
+  const question_id = req.query.question_id;
+  const { body, name, email, photos } = req.body;
+  const qryAns = `
+  INSERT INTO answers(id, question_id, body, date_written, answerer_name, answerer_email, reported, helpful) VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+  `;
+  const qryPhoto = `
+  INSERT INTO photos(id, answer_id, url) VALUES($1, $2, $3)
+  `;
+  const answer_id = await db
+    .query('SELECT MAX(id) FROM answers')
+    .catch((err) => {
+      res.send(err);
+    });
+  const photo_id = await db.query('SELECT MAX(id) FROM photos').catch((err) => {
+    res.send(err);
+  });
+  await db
+    .none(qryAns, [
+      answer_id[0].max + 1,
+      question_id,
+      body,
+      Date.now(),
+      name,
+      email,
+      false,
+      0,
+    ])
+    .then(() => {
+      if (photos && photos.length > 0) {
+        for (let i = 0; i < photos.length; i++) {
+          db.none(qryPhoto, [
+            photo_id.max[0] + 1 + i,
+            answer_id[0].max + 1,
+            photos[i],
+          ]).catch(() => {
+            res.sendStatus(500);
+          });
+        }
+      }
+    })
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(500);
+    });
+};
+
+// param: answer_id >> req.query
+module.exports.updateHelpful = async (req, res) => {
+  const answer_id = req.query.answer_id;
+  const qry = `UPDATE answers SET helpful = helpful+1 WHERE id = ${answer_id}`;
+  await db
+    .none(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
+
+// param: answer_id >> req.query
+module.exports.updateReport = async (req, res) => {
+  const answer_id = req.query.answer_id;
+  const qry = `UPDATE answers SET reported = ${true} WHERE id = ${answer_id}`;
+  await db
+    .none(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
