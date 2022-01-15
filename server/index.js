@@ -13,9 +13,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.send('Hello from the server side');
 });
-// get: answers, questions
-// post: answers, questions
-// put: ansqers report & helpful, questions report & helpful
 
 app.get('/answers', Answers.getAnswers);
 
@@ -24,6 +21,14 @@ app.get('/questions', Questions.getQuestions);
 app.post('/answers', Answers.postAnswer);
 
 app.post('/questions', Questions.postQuestion);
+
+app.put('/answers/helpful', Answers.updateHelpful);
+
+app.put('/questions/helpful', Questions.updateHelpful);
+
+app.put('/answers/report', Answers.updateReport);
+
+app.put('/questions/report', Questions.updateReport);
 
 app.listen(port, () => {
   console.log(`Listening as port: ${port}`);

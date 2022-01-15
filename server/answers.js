@@ -87,5 +87,30 @@ module.exports.postAnswer = async (req, res) => {
     });
 };
 
-// putHelpful
-// putReport
+// param: answer_id >> req.query
+module.exports.updateHelpful = async (req, res) => {
+  const answer_id = req.query.answer_id;
+  const qry = `UPDATE answers SET helpful = helpful+1 WHERE id = ${answer_id}`;
+  await db
+    .none(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
+
+// param: answer_id >> req.query
+module.exports.updateReport = async (req, res) => {
+  const answer_id = req.query.answer_id;
+  const qry = `UPDATE answers SET reported = t WHERE id = ${answer_id}`;
+  await db
+    .none(qry)
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch(() => {
+      res.sendStatus(400);
+    });
+};
