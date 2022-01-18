@@ -12,6 +12,8 @@ export const options = {
 };
 
 const url = 'http://localhost:3300/answers?question_id=289';
+// const url = 'http://localhost:3300/questions?product_id=36';
+// const url = 'http://localhost:3300/answers/helpful?answer_id=4';
 
 export default function () {
   const res = http.get(url);

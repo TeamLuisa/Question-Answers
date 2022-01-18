@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-var-requires */
+require('newrelic');
 const express = require('express');
 const compression = require('compression');
 const Answers = require('./answers.js');
