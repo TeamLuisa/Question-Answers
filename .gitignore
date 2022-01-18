@@ -4,3 +4,4 @@ config/config.js
 .DS_Store
 *.csv
 package-lock.json
+newrelic_agent.log
