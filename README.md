@@ -1,2 +1,2 @@
-# Question-Answers
-CSV files will be processed by ETL and turned into table schema in SQL files
+# Question-Answers API
+ETL process created table schema in .sql files created the tables by running a sudo command in the terminal to run the sql file. copied data from the csv to the created tables
